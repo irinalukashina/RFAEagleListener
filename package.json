@@ -1,0 +1,9 @@
+{
+  "name": "RFAEagleListener",
+  "version": "0.0.1",
+  "dependencies": {
+    "collections": "^5.0.7",
+    "mongodb": "^2.2.31",
+    "xml2js": "^0.4.19"
+  }
+}
