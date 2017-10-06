@@ -25,9 +25,38 @@ var handleInstantaneousDemand = function(eagleMessage) {
     });
 }
 
+var handleCurrentSummationDelivered = function(eagleMessage){
+    var attributes = eagleMessage.$;
+    var summationDelivered = parseInt(eagleMessage.CurrentSummationDelivered.SummationDelivered);
+    var summationReceived = parseInt(eagleMessage.CurrentSummationDelivered.SummationReceived);
+
+    var multiplier = parseInt(eagleMessage.CurrentSummationDelivered.Multiplier);
+    var divisor = parseInt(eagleMessage.CurrentSummationDelivered.Divisor);
+
+    var timeStamp = new Date(parseInt(eagleMessage.CurrentSummationDelivered.TimeStamp)  * 1000 + millisecondsToAdd);
+
+    var messageTimestampStr = attributes.timestamp.substring(0, attributes.timestamp.length - 1);
+    var messageTimestamp = new Date(parseInt(messageTimestampStr)  * 1000);
+
+    database.findDevice(attributes.macId, function(err, device) {
+        var currentSummationDelivered = {device: device._id, messageTimestamp: messageTimestamp, timeStamp: timeStamp, summationDelivered: summationDelivered * multiplier / divisor, summationReceived: summationReceived};
+        database.insertCurrentSummationDelivered([currentSummationDelivered], function(err, results){
+            console.log('Inserted');
+        });
+    });
+
+}
+
+
 module.exports = function (eagleMessage) {
     if(eagleMessage.InstantaneousDemand) {
         handleInstantaneousDemand(eagleMessage);
+    }else {
+       if(eagleMessage.CurrentSummationDelivered){
+            handleCurrentSummationDelivered(eagleMessage);
+            console.log(eagleMessage.CurrentSummationDelivered);
+
+        }
     }
 
     return null;

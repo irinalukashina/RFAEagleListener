@@ -36,3 +36,8 @@ module.exports.insertInstantaneousDemand = function(demands, callback) {
     var collection = connection.collection('instantDemand');
     collection.insertMany(demands, callback);
 };
+
+module.exports.insertCurrentSummationDelivered = function(demands, callback) {
+    var collection = connection.collection('currentSummationDelivered');
+    collection.insertMany(demands, callback);
+};
